@@ -1,8 +1,12 @@
+import { v4 as uuid } from 'uuid';
+import bcrypt from 'bcrypt';
 
+const token = uuid();
 
-async function TestRout(req, res){
-    console.log("cheguei na rota");
-    res.sendStatus(201);
+async function SigninController(req, res){
+    const { password } = req.body;
+    const cripPassword = bcrypt.hashSync(password, 10);
+    res.send({token: cripPassword}).status(201);
 }
 
-export {TestRout};
+export {SigninController};
