@@ -26,4 +26,21 @@ async function ResgisterUrl(req, res){
       }
 }
 
-export { ResgisterUrl };
+async function FilterById(req, res){
+    const { id } = req.params;
+    try{
+        const filterUrl = await connection.query(
+            'SELECT id, "shortUrl", url  FROM url WHERE id = $1',
+            [id]
+          );
+          console.log(filterUrl.rows);
+          res.status(200).send(filterUrl.rows);
+        } catch (error) {
+          res.status(500).send({ message: error.message });
+        }
+}
+
+async function VisitUrl(req, res){
+
+}
+export { ResgisterUrl, FilterById, VisitUrl };
