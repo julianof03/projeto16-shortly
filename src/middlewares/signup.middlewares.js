@@ -11,10 +11,9 @@ const userSchema = joi.object({
 async function validateUserSchema(req, res, next){
     const validation = userSchema.validate(req.body, { abortEarly: false });
     if(req.body.password != req.body.confirmPassword){
-        res.send({ message: "Senhas são difetentes" })
+        return res.status(404).send({ message: "Senhas são difetentes" });
     }
     if (validation.error) {
-
         return res.status(400).send({ message: validation.error.message });
     }
 
@@ -24,10 +23,11 @@ async function validateUserSchema(req, res, next){
       if(verifyUser.rows[0]){
         return res.status(422).send({ message: "Email ja cadastrado" });
       }
-    }catch{
       next();
+    }catch(error){
+      return res.status(404).send({message: error.message})
     }
-    next();
+
   } 
 
 

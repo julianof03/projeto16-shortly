@@ -1,3 +1,4 @@
+import connection from "../database/database.js";
 
 function validadeUrlSchema(req, res, next){
     const isValidUrl = urlString => {
@@ -15,7 +16,33 @@ function validadeUrlSchema(req, res, next){
         return res.status(400).send({ message: "url invalida"});
     }
     next();
-  } 
+  }
+
+  async function validateDeleteUrlSchema(req, res, next){
+      const { id } = req.params;
+
+      const { authorization } = req.headers;
+
+      let token = authorization?.replace("Bearer ", "");
 
 
-export default validadeUrlSchema;
+      const userSession = await connection.query('SELECT * FROM "session" WHERE token = $1', [
+        token,
+      ]);
+      const filterUrl = await connection.query(
+        'SELECT *  FROM url WHERE id = $1',
+        [id]
+      );
+      if(!filterUrl.rows[0]){
+        return res.status(404).send({message: "url não encontrada"})
+      }
+      console.log(filterUrl.rows[0].id)
+      if (userSession.rows[0].sessionid != filterUrl.rows[0].userid) {
+         return res.status(401).send({ message: "esse link não te pertence" });
+      }
+      next();
+
+  }
+
+
+export {validadeUrlSchema, validateDeleteUrlSchema};
