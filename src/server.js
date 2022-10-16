@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from "cors";
 import dotenv from "dotenv";
+import connection from "./database/database.js";
 dotenv.config()
 
 import siginupRouter from "./routers/signup.routers.js"
