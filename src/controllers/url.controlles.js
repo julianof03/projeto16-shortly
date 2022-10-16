@@ -41,6 +41,23 @@ async function FilterById(req, res){
 }
 
 async function VisitUrl(req, res){
+    const { shortUrl } = req.params;
 
+    try{
+        const filterUrl = await connection.query(
+            'SELECT * FROM url WHERE "shortUrl" = $1', [
+                shortUrl,
+              ]);
+        const newvistnumber = filterUrl.rows[0].visitCount + 1;
+        const increaseVists = await connection.query('UPDATE url SET "visitCount" = $1 WHERE "shortUrl" = $2', [
+            newvistnumber,
+            shortUrl,
+          ]);
+              console.log(filterUrl.rows[0].id)
+        res.redirect(`/urls/${filterUrl.rows[0].id}`)
+    }catch(error){
+        res.status(404).send({ message: "url não encontrado" });
+    }
+    
 }
 export { ResgisterUrl, FilterById, VisitUrl };
