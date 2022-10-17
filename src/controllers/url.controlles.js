@@ -48,7 +48,16 @@ async function VisitUrl(req, res) {
       'SELECT * FROM url WHERE "shortUrl" = $1', [
       shortUrl,
     ]);
+    const changeUser = await connection.query(
+      'SELECT * FROM users WHERE id = $1', [
+      filterUrl.rows[0].userid
+    ]);
     const newvistnumber = filterUrl.rows[0].visitCount + 1;
+    const newuservistnumber = changeUser.rows[0].visitCount + 1;
+    const increaseUserVists = await connection.query('UPDATE users SET "visitCount" = $1 WHERE id = $2', [
+      newuservistnumber,
+      filterUrl.rows[0].userid,
+    ]);
     const increaseVists = await connection.query('UPDATE url SET "visitCount" = $1 WHERE "shortUrl" = $2', [
       newvistnumber,
       shortUrl,

@@ -7,6 +7,7 @@ dotenv.config()
 import siginupRouter from "./routers/signup.routers.js"
 import SiginRouter from "./routers/signin.routers.js"
 import userRouter from "./routers/user.routers.js"
+import RankingRouter from "./routers/ranking.routers.js"
 import ShortenUrl from "./routers/url.routers.js"
 
 const app = express();
@@ -17,6 +18,7 @@ app.use(SiginRouter);
 app.use(siginupRouter);
 app.use(userRouter);
 app.use(ShortenUrl); 
+app.use(RankingRouter);
  
 const port = process.env.PORT || 4000;
 app.listen(port, () => {
