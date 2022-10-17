@@ -33,6 +33,7 @@ async function FilterById(req, res) {
       'SELECT id, "shortUrl", url  FROM url WHERE id = $1',
       [id]
     );
+    
     console.log(filterUrl.rows);
     res.status(200).send(filterUrl.rows);
   } catch (error) {
@@ -72,8 +73,6 @@ async function VisitUrl(req, res) {
 
 async function DeleteUrl(req, res) {
   const { id } = req.params;
-  console.log(id);
-  res.sendStatus(201);
   try {
     await connection.query("DELETE FROM url WHERE id = $1", [id]);
     res.sendStatus(204);

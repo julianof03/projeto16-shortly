@@ -4,9 +4,10 @@ import connection from "../database/database.js";
 async function userController(req, res){
     const { authorization } = req.headers;
     let token = authorization?.replace("Bearer ", "");
+
     const userSession = await connection.query('SELECT * FROM "session" WHERE token = $1', [
         token,
-      ]);
+    ]);
 
     try{
         const information = await connection.query(
@@ -19,7 +20,7 @@ async function userController(req, res){
             url.url,
             url."visitCount"
             FROM users 
-                JOIN url ON users.id = url.userid WHERE users.id = $1`, [12]);
+                JOIN url ON users.id = url.userid WHERE users.id = $1`, [userSession.rows[0].sessionid]);
 
         const auxarr = information.rows
         const newarr = {
@@ -34,7 +35,6 @@ async function userController(req, res){
             })})
         }
 
-        auxarr
         res.status(200).send(newarr);
     }catch {
         res.sendStatus(401);
