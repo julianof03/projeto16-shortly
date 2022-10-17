@@ -1,4 +1,5 @@
 import { nanoid } from 'nanoid'
+import dayjs from "dayjs";
 import connection from "../database/database.js";
 
 async function ResgisterUrl(req, res) {
@@ -14,11 +15,12 @@ async function ResgisterUrl(req, res) {
   const shortUrl = nanoid();
 
   try {
-    await connection.query('INSERT INTO "url" ("shortUrl", userid, "url", "visitCount") VALUES ($1, $2, $3, $4)', [
+    await connection.query('INSERT INTO "url" ("shortUrl", userid, "url", "visitCount", "createdAt") VALUES ($1, $2, $3, $4, $5)', [
       shortUrl,
       userSession.rows[0].sessionid,
       url,
-      0
+      0,
+      dayjs().format('YYYY-MM-DD hh:mm:ss')
     ]);
     res.status(201).send({ shortUrl: shortUrl });
   } catch (error) {
