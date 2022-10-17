@@ -14,10 +14,8 @@ async function RegisterUser(req, res){
             0,
             dayjs().format('YYYY-MM-DD hh:mm:ss')
         ]);
-          console.log("inseri");
           res.sendStatus(201);
     }catch (error){
-        console.log("passei reto"); 
         res.status(501).send({message: error.message});
     }
 } 

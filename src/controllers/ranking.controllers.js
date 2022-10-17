@@ -18,9 +18,7 @@ async function RankingController(req, res){
         
         res.status(201).send(auxArr);
     }catch (error){
-        console.log(typeof (token))
-        console.log("passei reto");
-        res.status(404).send({message: error.message});
+        res.status(501).send({message: error.message});
     }
 }
 

@@ -16,7 +16,7 @@ function validadeUrlSchema(req, res, next){
     const validation = isValidUrl(url);
 
     if (!validation) {
-        return res.status(400).send({ message: "url invalida"});
+        return res.status(422).send({ message: "url invalida"});
     }
     const { authorization } = req.headers;
 
@@ -38,6 +38,7 @@ function validadeUrlSchema(req, res, next){
       if(!authorization){
         res.status(401).send({message: "sem autorização"})
       }
+
       const userSession = await connection.query('SELECT * FROM "session" WHERE token = $1', [
         token,
       ]);
@@ -45,18 +46,16 @@ function validadeUrlSchema(req, res, next){
         'SELECT *  FROM url WHERE id = $1',
         [id]
       );
+
       if(!filterUrl.rows[0]){
         return res.status(404).send({error: "url não encontrada"})
       }
-
-      console.log(userSession.rows[0].sessionid )
-      console.log(filterUrl.rows[0].userid)
       if (userSession.rows[0].sessionid != filterUrl.rows[0].userid) {
          return res.status(401).send({ message: "esse link não te pertence" });
       }
+      
       next();
 
   }
-
 
 export {validadeUrlSchema, validateDeleteUrlSchema};

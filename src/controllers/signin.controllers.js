@@ -16,9 +16,7 @@ async function SigninController(req, res){
           console.log("inseri");
           res.sendStatus(201);
     }catch (error){
-        console.log(typeof (token))
-        console.log("passei reto");
-        res.status(404).send({message: error.message});
+        res.status(501).send({message: error.message});
     }
 }
 

@@ -36,8 +36,8 @@ async function userController(req, res){
         }
 
         res.status(200).send(newarr);
-    }catch {
-        res.sendStatus(401);
+    }catch (error){
+        res.status(401).send({message: error.message});
     }
 }
 

@@ -11,7 +11,6 @@ async function ResgisterUrl(req, res) {
   const userSession = await connection.query('SELECT * FROM "session" WHERE token = $1', [
     token,
   ]);
-  console.log(userSession.rows[0].sessionid)
   const shortUrl = nanoid();
 
   try {
@@ -24,7 +23,7 @@ async function ResgisterUrl(req, res) {
     ]);
     res.status(201).send({ shortUrl: shortUrl });
   } catch (error) {
-    res.status(500).send({ message: error.message });
+    res.status(501).send({ message: error.message });
   }
 }
 
@@ -35,11 +34,11 @@ async function FilterById(req, res) {
       'SELECT id, "shortUrl", url  FROM url WHERE id = $1',
       [id]
     );
+    if(filterUrl.rows.length === 0) return res.status(404).send({message: "url não encontrada"})
     
-    console.log(filterUrl.rows);
     res.status(200).send(filterUrl.rows);
   } catch (error) {
-    res.status(500).send({ message: error.message });
+    res.status(404).send({ message: error.message });
   }
 }
 
@@ -65,12 +64,10 @@ async function VisitUrl(req, res) {
       newvistnumber,
       shortUrl,
     ]);
-    console.log(filterUrl.rows[0].id)
     res.redirect(`/urls/${filterUrl.rows[0].id}`)
   } catch (error) {
     res.status(404).send({ message: "url não encontrado" });
   }
-
 }
 
 async function DeleteUrl(req, res) {
@@ -79,7 +76,7 @@ async function DeleteUrl(req, res) {
     await connection.query("DELETE FROM url WHERE id = $1", [id]);
     res.sendStatus(204);
   } catch (error) {
-    res.status(500).send({ message: error.message });
+    res.status(501).send({ message: error.message });
   }
 } 
 export { ResgisterUrl, FilterById, VisitUrl, DeleteUrl };
